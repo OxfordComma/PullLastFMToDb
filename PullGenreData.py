@@ -72,9 +72,9 @@ for index, t in enumerate(total_tracks):
             'name': artist_name,
             'genres': genres
         })
-        print(f'Added {artist_name} to database.')
+        print('Added %s to database.', artist_name)
     else:
-        print(f'{artist_name} already present in the database.')
+        print('%s already present in the database.', artist_name)
 
     try:
         track_index = track_list.index({'_id': {'track': t.track.title, 'listen_date': track_playback_date}})
@@ -83,7 +83,7 @@ for index, t in enumerate(total_tracks):
 
     if track_index is False:
         track_list.append({ "_id": { 'track': t.track.title, 'listen_date': track_playback_date} })
-        print(f'Adding {t.track.title}, listened to on {t.playback_date}.')
+        print('Adding %s, listened to on %s.', t.track.title, t.playback_date)
         tracks.insert_one({
             'artist': artist_name,
             'album': t.album,
@@ -91,7 +91,7 @@ for index, t in enumerate(total_tracks):
             'listen_date': track_playback_date
         })
     else:
-        print(f'Artist {artist_name} play at {t.playback_date} already recorded in database.')
+        print('Artist %s play at %s already recorded in database.', artist_name, t.playback_date)
 
     # if artist_name not in added_artists:
     #     added_artists.append(artist_name)
