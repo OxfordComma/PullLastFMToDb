@@ -7,11 +7,6 @@ import pymongo
 with open('credentials.json') as data_file:
     creds = json.load(data_file)
 
-pwd =  data['password']
-
-print(user)
-print(pwd)
-
 API_KEY = creds['API_KEY']
 API_SECRET = creds['API_SECRET']
 
