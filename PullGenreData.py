@@ -24,15 +24,15 @@ user_registered_time = user.get_unixtime_registered()
 client = pymongo.MongoClient(creds['mongo_server'])
 db = client.musicdb
 
-to_csv = pd.DataFrame(columns=['artist', 'album', 'track', 'listen_date'])
+#to_csv = pd.DataFrame(columns=['artist', 'album', 'track', 'listen_date'])
 
 
 artists = db.artists
 tracks = db.tracks
 
-start_date = user_registered_time
+# start_date = user_registered_time
 # start_date = datetime.date(2019, 7, 1).strftime('%s')
-# start_date = tracks.find().sort([('listen_date', -1)]).limit(1)[0]['listen_date'].strftime('%s')
+start_date = tracks.find().sort([('listen_date', -1)]).limit(1)[0]['listen_date'].strftime('%s')
 end_date = datetime.datetime.now().strftime('%s')
 # end_date = datetime.date(2019, 7, 26).strftime('%s')
 total_tracks = []
@@ -67,9 +67,9 @@ for index, t in enumerate(total_tracks):
             'name': artist_name,
             'genres': genres
         })
-        print('Added %s to database.', artist_name)
+        print('Added %s to database.' % artist_name)
     else:
-        print('%s already present in the database.', artist_name)
+        print('%s already present in the database.' % artist_name)
 
     try:
         track_index = track_list.index({'_id': {'track': t.track.title, 'listen_date': track_playback_date}})
@@ -78,7 +78,7 @@ for index, t in enumerate(total_tracks):
 
     if track_index is False:
         track_list.append({ "_id": { 'track': t.track.title, 'listen_date': track_playback_date} })
-        print('Adding %s, listened to on %s.', t.track.title, t.playback_date)
+        print('Adding %s, listened to on %s.' % (t.track.title, t.playback_date))
         tracks.insert_one({
             'artist': artist_name,
             'album': t.album,
@@ -86,7 +86,7 @@ for index, t in enumerate(total_tracks):
             'listen_date': track_playback_date
         })
     else:
-        print('Artist %s play at %s already recorded in database.', artist_name, t.playback_date)
+        print('Artist %s play at %s already recorded in database.' % (artist_name, t.playback_date))
 
     # if artist_name not in added_artists:
     #     added_artists.append(artist_name)
