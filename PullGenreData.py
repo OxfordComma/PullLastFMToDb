@@ -1,16 +1,23 @@
 import pylast
-import pandas as pd
 import numpy as np
 import datetime
 import json
 import pymongo
 
-API_KEY = "a66e2f168fdbcda137799a2c165678ee"
-API_SECRET = "0472282104fce606c4d59bd659a66397"
+with open('credentials.json') as data_file:
+    creds = json.load(data_file)
+
+pwd =  data['password']
+
+print(user)
+print(pwd)
+
+API_KEY = creds['API_KEY']
+API_SECRET = creds['API_SECRET']
 
 # In order to perform a write operation you need to authenticate yourself
-username = 'philosiphicus'
-password_hash = 'f22ec97b78a7ebf61bf26c6a0cedf014'
+username = creds['username']
+password_hash = creds['password_hash']
 
 # year = 2019
 
@@ -19,7 +26,7 @@ network = pylast.LastFMNetwork(api_key=API_KEY, api_secret=API_SECRET,
 user = network.get_user(username)
 user_registered_time = user.get_unixtime_registered()
 
-client = pymongo.MongoClient("mongodb+srv://musicdb:musicdb@cluster0-cld3q.mongodb.net/test?retryWrites=true&w=majority")
+client = pymongo.MongoClient(creds['mongo_server'])
 db = client.musicdb
 
 to_csv = pd.DataFrame(columns=['artist', 'album', 'track', 'listen_date'])
@@ -28,9 +35,9 @@ to_csv = pd.DataFrame(columns=['artist', 'album', 'track', 'listen_date'])
 artists = db.artists
 tracks = db.tracks
 
-# start_date = user_registered_time
+start_date = user_registered_time
 # start_date = datetime.date(2019, 7, 1).strftime('%s')
-start_date = tracks.find().sort([('listen_date', -1)]).limit(1)[0]['listen_date'].strftime('%s')
+# start_date = tracks.find().sort([('listen_date', -1)]).limit(1)[0]['listen_date'].strftime('%s')
 end_date = datetime.datetime.now().strftime('%s')
 # end_date = datetime.date(2019, 7, 26).strftime('%s')
 total_tracks = []
@@ -85,3 +92,18 @@ for index, t in enumerate(total_tracks):
         })
     else:
         print(f'Artist {artist_name} play at {t.playback_date} already recorded in database.')
+
+    # if artist_name not in added_artists:
+    #     added_artists.append(artist_name)
+    #     artist_list.append({
+    #         'name': artist_name,
+    #         'genres': genres
+    #     })
+    # to_csv.loc[index] = {
+    #     'artist': artist_name,
+    #     'album': t.album,
+    #     'track': t.track.title,
+    #     'listen_date': t.playback_date
+    # }
+
+# to_csv.to_csv('/Users/nick/Dropbox (Personal)/oxfordcomma.github.io/{0}.csv'.format(datetime.datetime.now().strftime('%d%b%Y_%H%M%S')), header=True, index=False)
