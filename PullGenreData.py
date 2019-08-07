@@ -1,5 +1,5 @@
 import pylast
-import numpy as np
+# import numpy as np
 import datetime
 import json
 import pymongo
