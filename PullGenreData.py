@@ -4,7 +4,7 @@ import datetime
 import json
 import pymongo
 
-with open('credentials.json') as data_file:
+with open('./credentials.json') as data_file:
     creds = json.load(data_file)
 
 API_KEY = creds['API_KEY']
